@@ -220,3 +220,382 @@ pre {
 }
 .main-badge { background: #0D1B3E; color: #fff; }
 .sub-badge  { background: #E0F2FE; color: #0C4A6E; }
+
+/* ── 숏폼 콘티 입력 ── */
+.conti-input-section {
+  background: var(--color-bg-secondary, #f9f9f9);
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+.conti-input-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+.conti-hint {
+  font-size: 11px;
+  color: #aaa;
+  font-weight: 400;
+  margin-left: 8px;
+}
+.conti-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.conti-badge {
+  background: #C8001E;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.conti-input-row input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+}
+.conti-input-row input:focus {
+  outline: none;
+  border-color: #C8001E;
+}
+
+/* ── 워크플로우 가이드 ── */
+.workflow-guide {
+  background: #f0f4ff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.workflow-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+.workflow-steps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.wf-step {
+  background: white;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.5;
+  color: #666;
+}
+.wf-step.done {
+  background: #C8001E;
+  color: white;
+  border-color: #C8001E;
+  font-weight: 600;
+}
+.wf-arrow {
+  color: #aaa;
+  font-size: 16px;
+}
+
+/* ── 프롬프트 블록 ── */
+.prompt-block {
+  border: 1.5px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: white;
+}
+.prompt-section {
+  margin-top: 12px;
+}
+.prompt-label {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.prompt-text {
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.6;
+  word-break: break-all;
+}
+.copy-btn {
+  margin-top: 8px;
+  padding: 6px 14px;
+  background: white;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.copy-btn:hover {
+  border-color: #C8001E;
+  color: #C8001E;
+}
+
+/* ── 다운로드 버튼 ── */
+.btn-download {
+  width: 100%;
+  padding: 12px;
+  background: #0D1B3E;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 16px;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.btn-download:hover { opacity: 0.85; }
+
+/* ── 콘티 컨셉 설명 ── */
+.conti-concept {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+/* ── 후킹 문구 ── */
+.hooking-box {
+  background: #FFF8E7;
+  border: 1.5px solid #FFD966;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hooking-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #B8860B;
+  white-space: nowrap;
+}
+.hooking-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333;
+  flex: 1;
+}
+
+/* ── 영상 생성 섹션 ── */
+.video-section {
+  border: 2px solid #0D1B3E;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 24px;
+  background: #f8f9ff;
+}
+.video-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0D1B3E;
+  margin-bottom: 6px;
+}
+.video-section-desc {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.video-upload-row {
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: white;
+}
+.video-upload-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.video-upload-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+.upload-label-btn {
+  display: inline-block;
+  padding: 7px 16px;
+  background: #0D1B3E;
+  color: white;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.upload-label-btn:hover { opacity: 0.85; }
+.video-result-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0D1B3E;
+  margin-bottom: 12px;
+}
+.video-result-block {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: white;
+}
+.wf-step-active {
+  background: #0D1B3E !important;
+  color: white !important;
+  border-color: #0D1B3E !important;
+  font-weight: 600;
+}
+
+/* ── 이미지 업로드 쌍 ── */
+.video-upload-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.video-upload-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.upload-item-label {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* ── 진행 단계 표시 ── */
+.progress-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+  padding: 20px 0 16px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e5e5e5;
+  color: #999;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.step-label {
+  font-size: 11px;
+  color: #999;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.step-line {
+  width: 40px;
+  height: 2px;
+  background: #e5e5e5;
+  margin: 0 4px;
+  margin-bottom: 20px;
+  transition: background 0.2s;
+}
+.progress-step.active .step-circle {
+  background: #C8001E;
+  color: white;
+}
+.progress-step.active .step-label {
+  color: #C8001E;
+  font-weight: 700;
+}
+.progress-step.done .step-circle {
+  background: #22c55e;
+  color: white;
+}
+.progress-step.done .step-circle::before {
+  content: "✓";
+}
+.progress-step.done .step-label {
+  color: #22c55e;
+}
+.step-line.done {
+  background: #22c55e;
+}
+
+/* ── 가이드 박스 ── */
+.guide-box {
+  background: #EFF6FF;
+  border: 1.5px solid #BFDBFE;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.guide-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1E40AF;
+  margin-bottom: 14px;
+}
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.guide-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.5;
+}
+.guide-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #1E40AF;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
