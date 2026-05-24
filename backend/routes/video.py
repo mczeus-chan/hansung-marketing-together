@@ -1,9 +1,12 @@
-from flask import Blueprint, request, Response
+from flask import Blueprint, request, Response, send_file
 from dotenv import load_dotenv
-import os, requests, traceback, json, base64
+import os, traceback, json, tempfile, requests
+import fal_client
+from moviepy import VideoFileClip, concatenate_videoclips, AudioFileClip
 
 load_dotenv()
-FAL_KEY = os.environ.get("FAL_KEY", "")
+os.environ["FAL_KEY"] = os.environ.get("FAL_KEY", "")
+
 video_bp = Blueprint("video", __name__)
 
 def respond(data, code=200):
@@ -14,69 +17,47 @@ def respond(data, code=200):
         headers={"Content-Type": "application/json; charset=utf-8"}
     )
 
-def upload_to_fal(file_bytes):
-    headers = {"Authorization": f"Key {FAL_KEY}"}
-    files   = {"file": ("image.png", file_bytes, "image/png")}
-    r = requests.post(
-        "https://rest.alpha.fal.ai/storage/upload/initiate",
-        headers=headers, files=files, timeout=60
-    )
-    if r.status_code != 200:
-        # fallback to direct upload
-        r = requests.post(
-            "https://fal.run/files",
-            headers=headers, files=files, timeout=60
-        )
-    print(f"[upload] status={r.status_code}", flush=True)
-    if r.status_code == 200:
-        d = r.json()
-        return d.get("url") or d.get("file_url")
-    print(f"[upload] error={r.text[:100]}", flush=True)
-    return None
-
-def make_video(start_url, end_url, prompt):
-    headers = {
-        "Authorization": f"Key {FAL_KEY}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "image_url":    start_url,
-        "prompt":       (prompt or "smooth cinematic animation")[:300],
-        "duration":     "5",
-        "aspect_ratio": "9:16",
-        "cfg_scale":    0.5,
-    }
-    if end_url:
-        payload["tail_image_url"] = end_url
-
-    print(f"[video] kling request start", flush=True)
-    r = requests.post(
-        "https://fal.run/fal-ai/kling-video/v1.6/standard/image-to-video",
-        headers=headers, json=payload, timeout=300
-    )
-    print(f"[video] kling status={r.status_code}", flush=True)
-    if r.status_code != 200:
-        return None, f"kling_error_{r.status_code}"
-    result = r.json()
-    url = result.get("video", {}).get("url") or result.get("url")
-    return url, None
-
 @video_bp.route("/upload-image", methods=["POST"])
 def upload_image():
     try:
         print("[upload] request received", flush=True)
         if "file" not in request.files:
             return respond({"error": "no_file"}, 400)
+
         f = request.files["file"]
         img_bytes = f.read()
-        print(f"[upload] file size={len(img_bytes)}", flush=True)
-        url = upload_to_fal(img_bytes)
-        if url:
-            print(f"[upload] success url={url[:50]}", flush=True)
-            return respond({"url": url})
-        return respond({"error": "upload_failed"}, 500)
+        print("[upload] file size=" + str(len(img_bytes)), flush=True)
+
+        # 이미지 압축 후 임시 파일로 저장
+        from PIL import Image
+        import io as _io
+        img = Image.open(_io.BytesIO(img_bytes))
+
+        # 최대 1280px로 리사이즈
+        max_size = 1280
+        if max(img.size) > max_size:
+            ratio = max_size / max(img.size)
+            new_size = (int(img.width * ratio), int(img.height * ratio))
+            img = img.resize(new_size, Image.LANCZOS)
+            print("[upload] resized to " + str(new_size), flush=True)
+
+        # JPEG로 압축 저장 (품질 85%)
+        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
+            img.convert("RGB").save(tmp, format="JPEG", quality=85, optimize=True)
+            tmp_path = tmp.name
+
+        compressed_size = os.path.getsize(tmp_path)
+        print("[upload] compressed size=" + str(compressed_size), flush=True)
+
+        url = fal_client.upload_file(tmp_path)
+        os.unlink(tmp_path)
+
+        print("[upload] success url=" + str(url)[:80], flush=True)
+        return respond({"url": url})
+
     except Exception as e:
-        print(f"[upload] exception={str(e)}", flush=True)
+        print("[upload] exception=" + str(e), flush=True)
+        print(traceback.format_exc(), flush=True)
         return respond({"error": "exception"}, 500)
 
 @video_bp.route("/video", methods=["POST"])
@@ -85,25 +66,104 @@ def generate_video():
         data   = json.loads(request.get_data(as_text=True))
         contis = data.get("contis", [])
         mood   = data.get("mood", "역동적·에너지")
-        print("[video] mood=" + mood, flush=True)
-        print(f"[video] contis={len(contis)}", flush=True)
+        print("[video] contis=" + str(len(contis)) + " mood=" + mood, flush=True)
+
         if not contis:
             return respond({"error": "no_contis"}, 400)
 
-        results = []
-        for c in contis:
+        video_urls = []
+
+        for c in sorted(contis, key=lambda x: x.get("conti_number", 0)):
             num   = c.get("conti_number", 0)
             s_url = c.get("start_url", "")
             e_url = c.get("end_url", "")
             pmt   = c.get("prompt", "")
-            print(f"[video] conti={num}", flush=True)
-            if not s_url:
-                results.append({"conti_number": num, "video_url": None, "error": "no_url"})
-                continue
-            video_url, error = make_video(s_url, e_url, pmt)
-            results.append({"conti_number": num, "video_url": video_url, "error": error})
+            print("[video] conti=" + str(num), flush=True)
 
-        return respond({"videos": results, "total": len(results)})
+            if not s_url:
+                continue
+
+            try:
+                payload = {
+                    "image_url":    s_url,
+                    "prompt":       (pmt or "smooth cinematic animation")[:300],
+                    "duration":     "5",
+                    "aspect_ratio": "9:16",
+                    "cfg_scale":    0.5,
+                }
+                if e_url:
+                    payload["tail_image_url"] = e_url
+
+                result = fal_client.subscribe(
+                    "fal-ai/kling-video/v1.6/standard/image-to-video",
+                    arguments=payload
+                )
+                video_url = result.get("video", {}).get("url") or result.get("url")
+                if video_url:
+                    video_urls.append({"conti_number": num, "url": video_url})
+                    print("[video] conti " + str(num) + " done", flush=True)
+
+            except Exception as e:
+                print("[video] conti " + str(num) + " error=" + str(e), flush=True)
+
+        if not video_urls:
+            return respond({"error": "no_videos_generated"}, 500)
+
+        # 영상 다운로드 후 합치기
+        print("[merge] downloading " + str(len(video_urls)) + " videos", flush=True)
+        tmp_dir    = tempfile.mkdtemp()
+        clip_paths = []
+
+        for v in sorted(video_urls, key=lambda x: x["conti_number"]):
+            r    = requests.get(v["url"], timeout=60)
+            path = os.path.join(tmp_dir, "clip_" + str(v["conti_number"]) + ".mp4")
+            with open(path, "wb") as f:
+                f.write(r.content)
+            clip_paths.append(path)
+            print("[merge] downloaded conti " + str(v["conti_number"]), flush=True)
+
+        print("[merge] concatenating", flush=True)
+        clips = [VideoFileClip(p) for p in clip_paths]
+        final = concatenate_videoclips(clips, method="compose")
+
+        # BGM 적용
+        bgm_map = {
+            "역동적·에너지": "bgm_energy.mp3",
+            "감성·따뜻함":   "bgm_emotional.mp3",
+            "정보·깔끔함":   "bgm_clean.mp3",
+            "트렌디·힙":     "bgm_trendy.mp3",
+        }
+        bgm_file = bgm_map.get(mood, "bgm_energy.mp3")
+        bgm_path = os.path.join(os.path.dirname(__file__), "../assets/bgm", bgm_file)
+
+        output = os.path.join(tmp_dir, "final_shortform.mp4")
+
+        if os.path.exists(bgm_path):
+            print("[merge] BGM 적용: " + bgm_file, flush=True)
+            audio = AudioFileClip(bgm_path)
+            if audio.duration > final.duration:
+                audio = audio.subclipped(0, final.duration)
+            audio = audio.with_volume_scaled(0.6)
+            final = final.with_audio(audio)
+            final.write_videofile(output, codec="libx264", audio_codec="aac", logger=None)
+            audio.close()
+        else:
+            print("[merge] BGM 없음, 무음 진행", flush=True)
+            final.write_videofile(output, codec="libx264", audio=False, logger=None)
+
+        for clip in clips:
+            clip.close()
+        final.close()
+        print("[merge] done! " + output, flush=True)
+
+        return send_file(
+            output,
+            mimetype="video/mp4",
+            as_attachment=True,
+            download_name="hansung_shortform.mp4"
+        )
+
     except Exception as e:
-        print(f"[video] exception={str(e)}", flush=True)
+        print("[video] exception=" + str(e), flush=True)
+        print(traceback.format_exc(), flush=True)
         return respond({"error": "exception"}, 500)
