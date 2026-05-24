@@ -51,33 +51,122 @@ function copyText(text, btn) {
   });
 }
 
+// ── PDF 업로드 처리 ───────────────────────────────
+var _pdfFile = null;
+
+function handlePdfUpload(input) {
+  if (!input.files || !input.files[0]) return;
+  _pdfFile = input.files[0];
+
+  var preview = document.getElementById("pdf-preview");
+  preview.innerHTML =
+    '<div class="pdf-file-info">' +
+      '<span class="pdf-file-icon">📄</span>' +
+      '<span class="pdf-file-name">' + _pdfFile.name + '</span>' +
+      '<span class="pdf-file-size">(' + (Math.round(_pdfFile.size / 1024)) + 'KB)</span>' +
+      '<button onclick="clearPdf()" class="pdf-clear-btn">✕</button>' +
+    '</div>';
+  preview.style.display = "block";
+  document.getElementById("pdf-upload-box").style.borderColor = "var(--hsu-red, #C8001E)";
+}
+
+function clearPdf() {
+  _pdfFile = null;
+  document.getElementById("pdf-input").value = "";
+  document.getElementById("pdf-preview").style.display = "none";
+  document.getElementById("pdf-upload-box").style.borderColor = "";
+}
+
 // ── 보도자료 생성 ──────────────────────────────────
 async function generatePress() {
-  var btn = document.querySelector("#panel-press .btn-primary");
-  btn.dataset.label = btn.textContent;
-  var body = {
-    dept_name:  document.getElementById("dept-name").value,
-    press_type: document.getElementById("press-type").value,
-    summary:    document.getElementById("press-summary").value,
-  };
-  if (!body.summary) { alert("핵심 내용 요약을 입력해주세요."); return; }
+  var btn     = document.querySelector("#panel-press .btn-primary");
+  var summary = document.getElementById("press-summary").value;
+
+  if (!_pdfFile && !summary) {
+    alert("PDF 파일을 업로드하거나 핵심 내용을 입력해주세요.");
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = "⏳ 생성 중...";
-  document.getElementById("press-result").style.display = "block";
-  document.getElementById("press-output").textContent = "AI가 생성 중입니다...";
+  document.getElementById("press-loading").style.display = "block";
+  document.getElementById("press-result").style.display  = "none";
+
   try {
-    var res  = await fetch(API_BASE + "/press", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    var res;
+
+    if (_pdfFile) {
+      // PDF 방식
+      var formData = new FormData();
+      formData.append("pdf",        _pdfFile);
+      formData.append("dept_name",  document.getElementById("dept-name").value);
+      formData.append("press_type", document.getElementById("press-type").value);
+      formData.append("summary",    summary);
+      res = await fetch(API_BASE + "/press", { method: "POST", body: formData });
+    } else {
+      // 일반 텍스트 방식
+      res = await fetch(API_BASE + "/press", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          dept_name:  document.getElementById("dept-name").value,
+          press_type: document.getElementById("press-type").value,
+          summary:    summary,
+        }),
+      });
+    }
+
     var data = await res.json();
-    document.getElementById("press-output").textContent = data.result;
+    document.getElementById("press-loading").style.display = "none";
+    document.getElementById("press-result").style.display  = "block";
+    document.getElementById("press-output").textContent    = data.result || data.error;
+
+    // 다운로드 버튼 표시
+    if (data.result) {
+      var dlBtn = document.getElementById("press-download-btn");
+      if (dlBtn) dlBtn.style.display = "block";
+    }
+
   } catch(e) {
-    document.getElementById("press-output").textContent = "오류가 발생했습니다.";
+    document.getElementById("press-loading").style.display = "none";
+    document.getElementById("press-result").style.display  = "block";
+    document.getElementById("press-output").textContent    = "오류가 발생했습니다.";
   }
+
   btn.disabled = false;
   btn.textContent = "✨ AI 보도자료 생성";
+}
+
+// ── 보도자료 Word 다운로드 ───────────────────────────
+async function downloadPress() {
+  var text = document.getElementById("press-output").textContent;
+  if (!text) { alert("먼저 보도자료를 생성해주세요."); return; }
+
+  var btn = document.getElementById("press-download-btn");
+  btn.textContent = "⏳ 변환 중...";
+  btn.disabled = true;
+
+  try {
+    var res = await fetch(API_BASE + "/press/download", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: text }),
+    });
+
+    var blob = await res.blob();
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement("a");
+    a.href     = url;
+    a.download = "한성대학교_보도자료.docx";
+    a.click();
+    URL.revokeObjectURL(url);
+
+  } catch(e) {
+    alert("다운로드 오류가 발생했습니다.");
+  }
+
+  btn.textContent = "⬇️ Word 파일 다운로드 (.docx)";
+  btn.disabled = false;
 }
 
 // ── 숏폼 STEP 1: 콘티 + 프롬프트 생성 ────────────
@@ -371,7 +460,7 @@ async function generateVideos() {
     var res = await fetch(API_BASE + "/video", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contis: contiData }),
+      body: JSON.stringify({ contis: contiData, mood: document.getElementById("short-mood").value }),
     });
 
     var contentType = res.headers.get("Content-Type") || "";

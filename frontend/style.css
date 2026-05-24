@@ -147,7 +147,7 @@ pre {
   margin-bottom: 8px;
 }
 .conti-num {
-  background: #C8001E;
+  background: #003DA5;
   color: white;
   font-size: 12px;
   font-weight: 700;
@@ -218,7 +218,7 @@ pre {
   padding: 3px 10px;
   border-radius: 999px;
 }
-.main-badge { background: #0D1B3E; color: #fff; }
+.main-badge { background: #002060; color: #fff; }
 .sub-badge  { background: #E0F2FE; color: #0C4A6E; }
 
 /* ── 숏폼 콘티 입력 ── */
@@ -248,7 +248,7 @@ pre {
   margin-bottom: 8px;
 }
 .conti-badge {
-  background: #C8001E;
+  background: #003DA5;
   color: white;
   font-size: 11px;
   font-weight: 700;
@@ -300,9 +300,9 @@ pre {
   color: #666;
 }
 .wf-step.done {
-  background: #C8001E;
+  background: #003DA5;
   color: white;
-  border-color: #C8001E;
+  border-color: #003DA5;
   font-weight: 600;
 }
 .wf-arrow {
@@ -382,8 +382,8 @@ pre {
 
 /* ── 후킹 문구 ── */
 .hooking-box {
-  background: #FFF8E7;
-  border: 1.5px solid #FFD966;
+  background: #EBF5FF;
+  border: 1.5px solid #00AEEF;
   border-radius: 8px;
   padding: 12px 14px;
   margin-bottom: 12px;
@@ -395,7 +395,7 @@ pre {
 .hooking-label {
   font-size: 11px;
   font-weight: 700;
-  color: #B8860B;
+  color: #003DA5;
   white-space: nowrap;
 }
 .hooking-text {
@@ -407,7 +407,7 @@ pre {
 
 /* ── 영상 생성 섹션 ── */
 .video-section {
-  border: 2px solid #0D1B3E;
+  border: 2px solid #003DA5;
   border-radius: 12px;
   padding: 20px;
   margin-top: 24px;
@@ -416,7 +416,7 @@ pre {
 .video-section-title {
   font-size: 16px;
   font-weight: 700;
-  color: #0D1B3E;
+  color: #002060;
   margin-bottom: 6px;
 }
 .video-section-desc {
@@ -446,7 +446,7 @@ pre {
 .upload-label-btn {
   display: inline-block;
   padding: 7px 16px;
-  background: #0D1B3E;
+  background: #003DA5;
   color: white;
   border-radius: 6px;
   font-size: 13px;
@@ -590,7 +590,7 @@ pre {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #1E40AF;
+  background: #003DA5;
   color: white;
   font-size: 11px;
   font-weight: 700;
@@ -598,4 +598,70 @@ pre {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+/* ── PDF 업로드 ── */
+.pdf-upload-box {
+  border: 2px dashed #dde2ec;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  background: #FAFBFD;
+  transition: border-color 0.2s;
+  margin-bottom: 8px;
+}
+.pdf-upload-box:hover { border-color: #C8001E; }
+.pdf-upload-icon { font-size: 32px; margin-bottom: 8px; }
+.pdf-upload-text { font-size: 14px; font-weight: 600; color: #0D1B3E; margin-bottom: 4px; }
+.pdf-upload-sub  { font-size: 12px; color: #999; margin-bottom: 14px; }
+.pdf-upload-btn  {
+  display: inline-block; padding: 8px 20px;
+  background: #003DA5; color: white;
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.pdf-upload-btn:hover { opacity: 0.85; }
+.pdf-file-info {
+  display: flex; align-items: center; gap: 8px;
+  background: #EBF5FF; border-radius: 8px;
+  padding: 10px 14px; margin-top: 12px;
+  font-size: 13px;
+}
+.pdf-file-icon { font-size: 18px; }
+.pdf-file-name { font-weight: 600; color: #0D1B3E; flex: 1; text-align: left; }
+.pdf-file-size { color: #888; font-size: 11px; }
+.pdf-clear-btn  {
+  background: none; border: none; color: #999;
+  cursor: pointer; font-size: 16px; padding: 0 4px;
+}
+.pdf-clear-btn:hover { color: #C8001E; }
+.press-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 16px 0 4px; color: #aaa; font-size: 12px;
+}
+.press-divider::before,
+.press-divider::after {
+  content: ''; flex: 1; height: 1px; background: #e5e5e5;
+}
+
+/* ── 이전 단계 버튼 ── */
+.btn-prev {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  margin-bottom: 16px;
+  background: white;
+  color: #003DA5;
+  border: 1.5px solid #003DA5;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.btn-prev:hover {
+  background: #003DA5;
+  color: white;
 }

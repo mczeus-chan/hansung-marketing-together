@@ -8,12 +8,18 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     :root {
-      --hsu-navy: #0D1B3E;
-      --hsu-blue: #1A3A7A;
+      /* 한성대학교 공식 교색 */
+      --hsu-sky-blue: #00AEEF;   /* Pantone 2915 C */
+      --hsu-blue: #003DA5;        /* Pantone 2728 C */
+      --hsu-dark-blue: #002060;   /* Pantone 281 C  */
+      --hsu-gray: #808080;        /* Pantone 424 C  */
+      /* 포인트 컬러 */
       --hsu-red: #C8001E;
       --hsu-red-dark: #A00018;
-      --hsu-gold: #E8A020;
-      --hsu-light: #F5F7FA;
+      /* UI 보조 */
+      --hsu-navy: #002060;
+      --hsu-light: #F0F5FA;
+      --hsu-white: #FFFFFF;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -38,7 +44,7 @@
     }
     .header-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(13,27,62,0.88) 0%, rgba(26,58,122,0.7) 60%, rgba(200,0,30,0.35) 100%);
+      background: linear-gradient(135deg, rgba(0,32,96,0.90) 0%, rgba(0,61,165,0.75) 55%, rgba(0,174,239,0.3) 100%);
     }
     .header-content {
       position: relative; z-index: 2;
@@ -70,7 +76,7 @@
 
     /* ── 탭바 ── */
     .tab-bar {
-      background: #0A1428;
+      background: #001845;
       display: flex; gap: 0;
       padding: 0 40px;
       border-bottom: 3px solid var(--hsu-red);
@@ -113,7 +119,7 @@
       content: '';
       display: inline-block;
       width: 4px; height: 20px;
-      background: var(--hsu-red); border-radius: 2px;
+      background: var(--hsu-sky-blue); border-radius: 2px;
     }
     .panel-desc {
       font-size: 13px; color: #666;
@@ -122,7 +128,7 @@
 
     label {
       display: block; font-size: 11px; font-weight: 700;
-      color: var(--hsu-navy); margin-bottom: 6px; margin-top: 16px;
+      color: var(--hsu-dark-blue); margin-bottom: 6px; margin-top: 16px;
       letter-spacing: 0.05em; text-transform: uppercase;
     }
     input[type=text], select, textarea {
@@ -133,8 +139,8 @@
       transition: border-color 0.15s;
     }
     input:focus, select:focus, textarea:focus {
-      outline: none; border-color: var(--hsu-red);
-      box-shadow: 0 0 0 3px rgba(200,0,30,0.08);
+      outline: none; border-color: var(--hsu-blue);
+      box-shadow: 0 0 0 3px rgba(0,61,165,0.1);
     }
     textarea { resize: vertical; }
 
@@ -165,7 +171,7 @@
       border-radius: 10px; overflow: hidden; background: white;
     }
     .result-label {
-      background: var(--hsu-navy); color: rgba(255,255,255,0.8);
+      background: var(--hsu-dark-blue); color: rgba(255,255,255,0.8);
       padding: 8px 16px; font-size: 10px; font-weight: 700;
       letter-spacing: 0.1em; text-transform: uppercase;
     }
@@ -176,11 +182,11 @@
     }
 
     /* ── 사이드바 ── */
-    .sidebar { background: var(--hsu-navy); padding: 28px 22px; }
+    .sidebar { background: var(--hsu-dark-blue); padding: 28px 22px; }
     .sidebar-section { margin-bottom: 24px; }
     .sidebar-title {
       font-size: 10px; font-weight: 700;
-      color: var(--hsu-red); letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--hsu-sky-blue); letter-spacing: 0.12em; text-transform: uppercase;
       margin-bottom: 14px; padding-bottom: 8px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
@@ -212,7 +218,7 @@
 
     /* ── 푸터 ── */
     .site-footer {
-      background: #060E1F; color: rgba(255,255,255,0.4);
+      background: #001030; color: rgba(255,255,255,0.4);
       text-align: center; padding: 14px;
       font-size: 11px; letter-spacing: 0.04em;
     }
@@ -234,8 +240,8 @@
     }
     .step-label { font-size: 10px; color: #999; font-weight: 500; white-space: nowrap; }
     .step-line { flex: 1; height: 2px; background: #e5e5e5; margin: 0 6px 18px; }
-    .progress-step.active .step-circle { background: var(--hsu-red); color: white; }
-    .progress-step.active .step-label { color: var(--hsu-red); font-weight: 700; }
+    .progress-step.active .step-circle { background: var(--hsu-blue); color: white; }
+    .progress-step.active .step-label { color: var(--hsu-blue); font-weight: 700; }
     .progress-step.done .step-circle { background: #22c55e; color: white; }
     .progress-step.done .step-label { color: #22c55e; }
     .step-line.done { background: #22c55e; }
@@ -247,6 +253,9 @@
     <div class="header-bg"></div>
     <div class="header-overlay"></div>
     <div class="header-content">
+      
+      
+      <div class="header-title-wrap">
         <h1>마케팅투게더</h1>
         <p>HANSUNG UNIVERSITY AI MARKETING AGENT</p>
       </div>
@@ -265,7 +274,22 @@
       <!-- 보도자료 -->
       <div class="panel active" id="panel-press">
         <div class="panel-title">보도자료 생성</div>
-        <p class="panel-desc">부서 정보와 핵심 내용을 입력하면 AI가 한성대학교 스타일의 보도자료 초안을 작성합니다.</p>
+        <p class="panel-desc">부서 정보와 핵심 내용을 입력하거나 PDF 파일을 업로드하면 AI가 한성대학교 스타일의 보도자료를 작성합니다.</p>
+
+        <!-- PDF 업로드 영역 -->
+        <div class="pdf-upload-box" id="pdf-upload-box">
+          <div class="pdf-upload-icon">📄</div>
+          <div class="pdf-upload-text">PDF 파일을 드래그하거나 클릭해서 업로드</div>
+          <div class="pdf-upload-sub">계획서, 보고서, 공문 등 업로드 시 자동으로 내용을 분석합니다</div>
+          <input type="file" id="pdf-input" accept=".pdf" style="display:none;" onchange="handlePdfUpload(this)" />
+          <label for="pdf-input" class="pdf-upload-btn">📁 PDF 선택</label>
+          <div id="pdf-preview" style="display:none;"></div>
+        </div>
+
+        <div class="press-divider">
+          <span>또는 직접 입력</span>
+        </div>
+
         <label>부서명</label>
         <input type="text" id="dept-name" placeholder="예: 교육혁신처, 학생진로취업처, 글로컬협력처" />
         <label>행사·사업 유형</label>
@@ -273,14 +297,22 @@
           <option value="">선택하세요</option>
           <option>학사 행사</option><option>연구 성과</option>
           <option>산학협력</option><option>학생 활동</option>
-          <option>취업·창업</option><option>기타</option>
+          <option>취업·창업</option><option>국제 교류</option><option>기타</option>
         </select>
-        <label>핵심 내용 요약</label>
-        <textarea id="press-summary" rows="5" placeholder="행사의 목적, 일시, 장소, 주요 내용을 간략히 입력하세요."></textarea>
+        <label>핵심 내용 요약 <span style="font-weight:400; color:#999;">(PDF 업로드 시 자동 보완)</span></label>
+        <textarea id="press-summary" rows="4" placeholder="행사의 목적, 일시, 장소, 주요 내용을 간략히 입력하세요."></textarea>
         <button class="btn-primary" onclick="generatePress()">✨ AI 보도자료 생성</button>
+        <div id="press-loading" style="display:none; text-align:center; padding:20px; color:#888; font-size:14px;">
+          ⏳ AI가 보도자료를 작성 중입니다...
+        </div>
         <div class="result-box" id="press-result" style="display:none;">
           <div class="result-label">생성 결과</div>
           <pre id="press-output"></pre>
+          <div style="padding: 12px 16px; border-top: 1px solid #eee;">
+            <button id="press-download-btn" class="btn-download" onclick="downloadPress()" style="display:none;">
+              ⬇️ Word 파일 다운로드 (.docx)
+            </button>
+          </div>
         </div>
       </div>
 
@@ -299,7 +331,7 @@
         <div class="step-panel" id="step-panel-1">
           <p class="panel-desc">주제와 각 콘티 컨셉을 입력하면 AI가 이미지 프롬프트를 생성합니다.</p>
           <label>영상 주제</label>
-          <input type="text" id="short-topic" placeholder="예: 2026 한성대학교 대동제" />
+          <input type="text" id="short-topic" placeholder="예: 2026학년도 한성대학교 대동제" />
           <label>영상 분위기</label>
           <select id="short-mood">
             <option>역동적·에너지</option><option>감성·따뜻함</option>
@@ -307,11 +339,11 @@
           </select>
           <div class="conti-input-section">
             <div class="conti-input-header">5개 콘티 컨셉 입력 <span class="conti-hint">비워두면 AI가 자동 구성합니다</span></div>
-            <div class="conti-input-row"><span class="conti-badge">콘티 1</span><input type="text" id="conti-1" placeholder="예: 상상부기가 벚꽃 캠퍼스를 걷는 장면" /></div>
-            <div class="conti-input-row"><span class="conti-badge">콘티 2</span><input type="text" id="conti-2" placeholder="예: 친구들과 축제 부스에서 노는 장면" /></div>
-            <div class="conti-input-row"><span class="conti-badge">콘티 3</span><input type="text" id="conti-3" placeholder="예: 무대에서 춤추는 장면" /></div>
-            <div class="conti-input-row"><span class="conti-badge">콘티 4</span><input type="text" id="conti-4" placeholder="예: 친구들과 음식을 나눠먹는 장면" /></div>
-            <div class="conti-input-row"><span class="conti-badge">콘티 5</span><input type="text" id="conti-5" placeholder="예: 모두 모여 기념사진 찍는 마무리 장면" /></div>
+            <div class="conti-input-row"><span class="conti-badge">콘티 1</span><input type="text" id="conti-1" placeholder="예: 상상부기가 벚꽃이 가득한 캠퍼스를 걷는 장면" /></div>
+            <div class="conti-input-row"><span class="conti-badge">콘티 2</span><input type="text" id="conti-2" placeholder="예: 친구들과 축제 부스를 체험하며 노는 장면" /></div>
+            <div class="conti-input-row"><span class="conti-badge">콘티 3</span><input type="text" id="conti-3" placeholder="예: 연예인 공연을 보며 즐기는 장면" /></div>
+            <div class="conti-input-row"><span class="conti-badge">콘티 4</span><input type="text" id="conti-4" placeholder="예: 축제가 끝나고 집에 돌아와 녹초가 된 모습" /></div>
+            <div class="conti-input-row"><span class="conti-badge">콘티 5</span><input type="text" id="conti-5" placeholder="예: 교수님의 과제제출 연락을 받고 넋이 나가는 상상부기" /></div>
           </div>
           <button class="btn-primary" onclick="generateShortform()">✨ 이미지 프롬프트 생성</button>
           <div id="short-loading" style="display:none; text-align:center; padding:32px; color:#888; font-size:14px; line-height:2.2;">
@@ -320,6 +352,7 @@
           <div id="short-prompt-grid" style="margin-top:16px;"></div>
         </div>
         <div class="step-panel" id="step-panel-2" style="display:none;">
+          <button class="btn-prev" onclick="goToStep(1)">← 이전 단계로</button>
           <div class="guide-box">
             <div class="guide-title">📸 ChatGPT로 이미지 10장 생성하기</div>
             <div class="guide-steps">
@@ -332,11 +365,13 @@
           <button class="btn-primary" onclick="goToStep(3)" style="margin-top:16px;">✅ 이미지 준비 완료 → 업로드하기</button>
         </div>
         <div class="step-panel" id="step-panel-3" style="display:none;">
+          <button class="btn-prev" onclick="goToStep(2)">← 이전 단계로</button>
           <p class="panel-desc">ChatGPT로 생성한 이미지를 콘티별로 업로드해주세요.</p>
           <div id="video-upload-grid"></div>
           <button class="btn-primary" onclick="goToStep(4)" style="margin-top:16px;">🎬 영상 제작 단계로 이동</button>
         </div>
         <div class="step-panel" id="step-panel-4" style="display:none;">
+          <button class="btn-prev" onclick="goToStep(3)">← 이전 단계로</button>
           <p class="panel-desc">Kling AI가 이미지를 영상으로 변환하고 하나로 합칩니다.</p>
           <button class="btn-primary" onclick="generateVideos()" id="video-start-btn">🎬 영상 생성 시작</button>
           <div id="video-loading" style="display:none; text-align:center; padding:24px; color:#888; font-size:14px; line-height:2.2;">
@@ -351,15 +386,15 @@
         <div class="panel-title">카드뉴스 제작</div>
         <p class="panel-desc">행사 정보를 입력하면 AI가 한성대 스타일의 카드뉴스를 자동 생성합니다.<br>슬라이드 수는 내용에 따라 자동 조정되며, 그라데이션은 매번 랜덤 적용됩니다.</p>
         <label>행사명</label>
-        <input type="text" id="event-name" placeholder="예: 2026 한성대학교 대동제" />
+        <input type="text" id="event-name" placeholder="예: 2026 총장배 e스포츠 대회" />
         <label>주관 부서·단체</label>
-        <input type="text" id="event-org" placeholder="예: 학생진로취업처" />
+        <input type="text" id="event-org" placeholder="예: 콘텐츠디자인칼리지" />
         <label>행사 일시</label>
-        <input type="text" id="event-date" placeholder="예: 2026.05.13.(수) ~ 15 (금)" />
+        <input type="text" id="event-date" placeholder="예: 2026.05.15 (금) 10:00" />
         <label>행사 장소</label>
-        <input type="text" id="event-place" placeholder="예: 한성대학교 캠퍼스 전역" />
+        <input type="text" id="event-place" placeholder="예: 상상관 상상홀" />
         <label>참석자</label>
-        <textarea id="event-attendees" rows="2" placeholder="예: 이창원 총장 및 교내 구성원 전체"></textarea>
+        <textarea id="event-attendees" rows="2" placeholder="예: 이창원 총장, 교학부총장, 대외협력부총장, 한디칼원장 및 학생 100여명"></textarea>
         <label>주요 내용</label>
         <textarea id="event-content" rows="6" placeholder="행사의 주요 내용, 성과, 특이사항, 총장 코멘트 등을 입력하세요."></textarea>
         <button class="btn-primary" onclick="generateCardnews()">✨ AI 카드뉴스 생성</button>
@@ -420,7 +455,7 @@
           <div><strong>버전</strong>Demo v1.0 · 2026</div>
         </div>
       </div>
-   
+      
     </aside>
   </div>
 
